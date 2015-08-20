@@ -13,14 +13,23 @@ if (!file.exists("./Source_Classification_Code.rds") | !file.exists("./summarySC
 #read the data
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
-#subset the data for the desired dates
+
+#subset the data
+
+#Selecting only the Baltimore City data
 subdata <- NEI[NEI$fips == "24510",]
+
+#Summing emissions by type and year
 subdata2 <- aggregate(Emissions ~ year + type, subdata, sum)
+#converting type to a factor 
 subdata2 <- transform(subdata2, type = factor(type))
 
-qplot(year, Emissions, data = subdata2, facets = . ~ type)
+#plotting
+qplot(year, Emissions, data = subdata2, facets = . ~ type, aes(x=year), geom=c("point", "line"), color = type) +
+  labs(title="Baltimore Total Emissions by type and year", x="Year", y="Emissions (tons)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-#this is gigantic
+#saving plot
 ggsave("plot3.png")
 
 #turn off device

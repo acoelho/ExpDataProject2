@@ -13,19 +13,24 @@ if (!file.exists("./Source_Classification_Code.rds") | !file.exists("./summarySC
 #read the data
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
-#subset the data for the desired dates
 
+#subset the data
 
+#create list of SCC values that have one of the 3 EI.Sector values that represent coal combustion
 coalsource <- SCC[SCC$EI.Sector == "Fuel Comb - Electric Generation - Coal" | SCC$EI.Sector == "Fuel Comb - Industrial Boilers, ICEs - Coal" | SCC$EI.Sector == "Fuel Comb - Comm/Institutional - Coal" , "SCC"]
 
+#selecting only coal combustion rows of NEI
 subdata <- NEI[NEI$SCC %in% coalsource,]
-subdata <- transform(subdata, SCC = factor(SCC))
 
+#Summing emissions by year
 subdata2 <- aggregate(Emissions ~ year, subdata, sum)
 
-qplot(year, Emissions, data = subdata2)
+#plotting
+qplot(year, Emissions, data = subdata2, geom=c("point", "line")) +
+  labs(title="Coal Combustion Emisisons (US)", x="Year", y="Emissions (tons)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-#this is gigantic
+#saving plot
 ggsave("plot4.png")
 
 #turn off device

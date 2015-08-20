@@ -13,21 +13,28 @@ if (!file.exists("./Source_Classification_Code.rds") | !file.exists("./summarySC
 #read the data
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
+
 #subset the data for the desired dates
 
+#create list of SCC values that have one of the 4 EI.Sector values that represent motor vehicles (taken to mean 'road vehicles')
+motsource <- SCC[SCC$EI.Sector == "Mobile - On-Road Diesel Heavy Duty Vehicles" | SCC$EI.Sector == "Mobile - On-Road Gasoline Heavy Duty Vehicles" | 
+                   SCC$EI.Sector == "Mobile - On-Road Diesel Light Duty Vehicles" | SCC$EI.Sector == "Mobile - On-Road Gasoline Light Duty Vehicles" , "SCC"]
 
-motsource <- SCC[SCC$SCC.Level.One == "Mobile Sources" , "SCC"]
-
+#Selecting only the Baltimore City data
 subdata <- NEI[NEI$fips == "24510",]
 
+#selecting only motor vehicle rows of NEI
 subdata2 <- subdata[subdata$SCC %in% motsource,]
-subdata2 <- transform(subdata2, SCC = factor(SCC))
 
+#Summing emissions by year
 subdata3 <- aggregate(Emissions ~ year, subdata2, sum)
 
-qplot(year, Emissions, data = subdata3)
+#plotting
+qplot(year, Emissions, data = subdata3, geom=c("point", "line")) +
+  labs(title="Motor Vehicle Emissions (Baltimore)", x="Year", y="Emissions (tons)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-#this is gigantic
+#saving plot
 ggsave("plot5.png")
 
 #turn off device

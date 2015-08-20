@@ -11,12 +11,16 @@ if (!file.exists("./Source_Classification_Code.rds") | !file.exists("./summarySC
 #read the data
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
-#subset the data for the desired dates
-subdata <- aggregate(Emissions ~ year, NEI, sum)
 
+#turning on device
 png(file="plot1.png")
 
-with(subdata, plot(year, Emissions, type = "b", main = "Total Yearly PM2.5 Emissions", xaxt = "n", yaxt = "n", xlab = "Year", ylab = "Emissions (tons)" ))
+#subset the data 
+#Summing emissions by year
+subdata <- aggregate(Emissions ~ year, NEI, sum)
+
+#plotting
+with(subdata, plot(year, Emissions, type = "b", main = "Total PM2.5 Emissions", xaxt = "n", yaxt = "n", xlab = "Year", ylab = "Emissions (tons)" ))
 axis(1, c(1999,2002,2005,2008), labels = TRUE)
 axis(2, c(4000000,5000000,6000000,7000000), labels = c("4000000","5000000","6000000","7000000"))
 

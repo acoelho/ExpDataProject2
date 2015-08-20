@@ -11,12 +11,18 @@ if (!file.exists("./Source_Classification_Code.rds") | !file.exists("./summarySC
 #read the data
 NEI <- readRDS("summarySCC_PM25.rds")
 SCC <- readRDS("Source_Classification_Code.rds")
-#subset the data for the desired dates
-subdata <- NEI[NEI$fips == "24510",]
-subdata2 <-  aggregate(Emissions ~ year, subdata, sum)
 
+#turning on device
 png(file="plot2.png")
 
+#subset the data
+#Selecting only the Baltimore City data
+subdata <- NEI[NEI$fips == "24510",]
+
+#Summing emissions by year
+subdata2 <-  aggregate(Emissions ~ year, subdata, sum)
+
+#plotting
 with(subdata2, plot(year, Emissions, type = "b", main = "Baltimore Yearly PM2.5 Emissions", xaxt = "n", yaxt = "n", xlab = "Year", ylab = "Emissions (tons)" ))
 axis(1, c(1999,2002,2005,2008), labels = TRUE)
 axis(2, c(1000,2000,3000,4000), labels = c("1000","2000","3000","4000"))
