@@ -39,13 +39,16 @@ ladata2 <- ladata[ladata$SCC %in% motsource,]
 ladata3 <- aggregate(Emissions ~ year, ladata2, sum)
 
 #plotting
-ggplot() + geom_line(data = baldata3, aes(x = year, y = Emissions, color = "Baltimore") ) +
+my_plot <-  ggplot() + geom_line(data = baldata3, aes(x = year, y = Emissions, color = "Baltimore") ) +
   geom_line(data = ladata3, aes(x = year, y = Emissions, colour = "Los Angeles")) +
   labs(title="Motor Vehicle Emissions", x="Year", y="Emissions (tons)") +
   scale_colour_discrete(name  ="City")
 
+#turning on device
+png("plot6.png")
+
 #saving plot
-ggsave("plot6.png")
+print(my_plot)
 
 #turn off device
-dev.off
+dev.off()

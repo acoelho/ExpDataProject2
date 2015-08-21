@@ -25,12 +25,15 @@ subdata2 <- aggregate(Emissions ~ year + type, subdata, sum)
 subdata2 <- transform(subdata2, type = factor(type))
 
 #plotting
-qplot(year, Emissions, data = subdata2, facets = . ~ type, aes(x=year), geom=c("point", "line"), color = type) +
+my_plot <- qplot(year, Emissions, data = subdata2, facets = . ~ type, aes(x=year), geom=c("point", "line"), color = type) +
   labs(title="Baltimore Total Emissions by type and year", x="Year", y="Emissions (tons)") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+#turning on device
+png("plot3.png")
+
 #saving plot
-ggsave("plot3.png")
+print(my_plot)
 
 #turn off device
-dev.off
+dev.off()

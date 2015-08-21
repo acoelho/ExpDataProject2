@@ -30,12 +30,15 @@ subdata2 <- subdata[subdata$SCC %in% motsource,]
 subdata3 <- aggregate(Emissions ~ year, subdata2, sum)
 
 #plotting
-qplot(year, Emissions, data = subdata3, geom=c("point", "line")) +
+my_plot <-  qplot(year, Emissions, data = subdata3, geom=c("point", "line")) +
   labs(title="Motor Vehicle Emissions (Baltimore)", x="Year", y="Emissions (tons)") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+#turning on device
+png("plot5.png")
+
 #saving plot
-ggsave("plot5.png")
+print(my_plot)
 
 #turn off device
-dev.off
+dev.off()
